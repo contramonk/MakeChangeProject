@@ -18,7 +18,7 @@ public class MakeChange {
 		// Story 2: Prompt user to ask how much customer gave
 		askMoneyGiven(kb);
 		// Story 3: Tell user if too little given, or exact amount
-		checkMoneyGiven();
+		checkMoneyGiven(kb);
 		// Story 4: Display change due using largest denoms possible
 		giveChangeDue();
 
@@ -27,31 +27,33 @@ public class MakeChange {
 	}
 
 	public static void askHowMuch(Scanner kb) {
-		System.out.print("How much money is the item? ");
+		System.out.print("The customer tells you how much the item cost. How much was it? >> ");
 		itemPrice = kb.nextDouble();
 		System.out.println(itemPrice);
 	}
 
 	public static void askMoneyGiven(Scanner kb) {
-		System.out.print("How much money did the customer give? ");
+		System.out.print("The customer hands you money. How much did he give you? >> ");
 		amountPaid = kb.nextDouble();
 		System.out.println(amountPaid);
 	}
 
-	public static void checkMoneyGiven() {
+	public static void checkMoneyGiven(Scanner kb) {
 		if (amountPaid < itemPrice) {
-			System.out.println("The customer did not give you enough");
+			System.out.println("The customer short changed you...");
+			notEnough(amountPaid, kb);
 		} else if (amountPaid == itemPrice) {
-			System.out.println("No change due.");
+			System.out.println("No change due...");
+			System.out.println("The customer walks out the door with his item...");
+			restart(kb);
 		} else {
-			System.out.println("Calculating change");
+			System.out.println("...Calculating change...");
 		}
 	}
 
 	public static void giveChangeDue() {
 		double change = amountPaid - itemPrice;
-		//change = round(change);
-		System.out.println(round(change));
+		System.out.println("You tell them $" + round(change) + " is due back.");
 		double[] denominations = { 100, 50, 20, 10, 5, 1, 0.5, 0.25, 0.10, 0.05, 0.01 };
 		for (int i = 0; i < denominations.length; i++) {
 
@@ -63,6 +65,21 @@ public class MakeChange {
 			}
 
 		}
+
+	}
+
+	public static void notEnough(double custPaid, Scanner kb) {
+		double difference = itemPrice - amountPaid;
+
+		System.out.print("They better give you at least $" + round(difference));
+		System.out.println("more moneys, that isn't enough! >> ");
+		System.out.println();
+		System.out.println("The customer hands you more money...");
+		System.out.println("How much did they give you? >> ");
+		double moreMoney = round(kb.nextDouble());
+		amountPaid = round(amountPaid + moreMoney);
+
+		checkMoneyGiven(kb);
 
 	}
 
@@ -82,13 +99,23 @@ public class MakeChange {
 	}
 
 	public static void restart(Scanner kb) {
-		System.out.println("Would you look to restart (t/f): ");
-		String askRestart = kb.next();
-		if (askRestart.equals("t")) {
-			run();
-		} else {
-			askRestart = "f";
-		}
+		System.out.println("There is another customer in line. Should you help him? (y/n): ");
+		String askRestart = "ninja";
+
+			askRestart = kb.next().toLowerCase();
+	
+			switch (askRestart) {
+				case "n": 
+					System.out.println("Thank you, come again!");
+					break;
+				case "y": 
+					run();
+					break;
+				default : 
+					System.out.println("I don't understand...");
+					restart(kb);
+					break;
+			}
 	}
 
 }
