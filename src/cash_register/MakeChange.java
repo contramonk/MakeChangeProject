@@ -82,29 +82,43 @@ public class MakeChange {
 	/**
 	 * This method calculates change. First the amount of change is calculated
 	 * by subtracting amountPaid from itemPrice, then it prints the rounded
-	 * amount of change due. Then an algorithm is used to loop through an ordered
-	 * array high to low of bill denominations. If denomination > change, the
-	 * denomination is not printed, otherwise it is printed. If the denomination
-	 * prints denomination is subtracted from change and the i value is
-	 * decremented and checks once again whether that same denomination value is
-	 * greater than change.
+	 * amount of change due. Then an algorithm is used to loop through an
+	 * ordered array high to low of bill denominations. If denomination >
+	 * change, the denomination is not printed, otherwise it is printed. If the
+	 * denomination prints denomination is subtracted from change and the i
+	 * value is decremented and checks once again whether that same denomination
+	 * value is greater than change.
 	 * 
 	 * @author Jon Edwards
 	 */
 
 	public static void giveChangeDue() {
+		int j = 0;
 		System.out.println("...Calculating change...");
 		double change = amountPaid - itemPrice;
 		System.out.println("You tell them $" + round(change) + " is due back.");
-		double[] denominations = { 100, 50, 20, 10, 5, 1, 0.5, 0.25, 0.10, 0.05, 0.01 };
-		String[] denominationNames = {"Hundred", "Fifty", "Twenty", "Ten", "Five", "One", "Fifty-cent", "Quarter", "Dime", "Nickel", "Penny"};
+		double[] denominations = { 100, 50, 20, 10, 5, 1, 0.25, 0.10, 0.05, 0.01 };
+		String[][] denominationNames = { {"Hundred", "Fifty", "Twenty", "Ten", "Five", "One", "Quarter",
+				"Dime", "Nickel", "Penny"}, {"Hundreds", "Fifties", "Twenties", "Tens", "Fives", "Ones", "Quarters", "Dimes", "Nickles", "Pennies"}};
 		for (int i = 0; i < denominations.length; i++) {
-
+			int k = i;
 			if (round(denominations[i]) <= round(change)) {
-				System.out.println(denominations[i] + "\t" + denominationNames[i]);
+				// System.out.print(denominations[i] + "\t" +
+				// denominationNames[i] + "\t");
 				round(change -= denominations[i]);
-
 				i--;
+			}
+			if (i != k) {
+				j++;
+			} else {
+				if (j != 0) {
+					if (j>1) {
+						System.out.println(j + " " + denominationNames[1][i]);						
+					} else {
+						System.out.println(j + " " + denominationNames[0][i]);						
+					}
+				}
+				j = 0;
 			}
 
 		}
