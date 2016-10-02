@@ -1,5 +1,5 @@
 ##Make Change Project
 
-###How to run file
+#####How to run file
 
-####File runs in terminal.
+######File runs in terminal.
