@@ -13,21 +13,16 @@ public class MakeChange {
 	/**
 	 * Begins the program.
 	 * 
-	 * @author Jon Edwards
+	 * @author jon edwards
 	 */
 
 	public static void run() {
 		Scanner kb = new Scanner(System.in);
 
-		// Story 1: Prompt user asking for item price
-		askHowMuch(kb);
-		// Story 2: Prompt user to ask how much customer gave
-		askMoneyGiven(kb);
-		// Story 3: Tell user if too little given, or exact amount
-		checkMoneyGiven(kb);
-		// Story 4: Display change due using largest denoms possible
-		giveChangeDue();
-
+		askHowMuch(kb); // Story 1: Prompt user asking for item price
+		askMoneyGiven(kb); // Story 2: Prompt user to ask how much customer gave
+		checkMoneyGiven(kb); // Make sure money was enough
+		giveChangeDue(); // Story 4: Display change with highest denom possible
 		restart(kb);
 
 	}
@@ -35,7 +30,7 @@ public class MakeChange {
 	/**
 	 * Asks the user how much the item costs, and receives input.
 	 * 
-	 * @author Jon Edwards
+	 * @author jon edwards
 	 * @param kb
 	 *            gets the item price.
 	 */
@@ -43,7 +38,7 @@ public class MakeChange {
 	public static void askHowMuch(Scanner kb) {
 		System.out.print("The customer tells you how much the item cost. How much was it? >> ");
 		itemPrice = kb.nextDouble();
-		System.out.println(itemPrice);
+		System.out.println("\nThe customer let you know that the item cost $" + itemPrice);
 	}
 
 	/**
@@ -51,13 +46,14 @@ public class MakeChange {
 	 * 
 	 * @param kb
 	 *            gets the amount given.
-	 * @author Jon Edwards
+	 * @author jon edwards
 	 */
 
 	public static void askMoneyGiven(Scanner kb) {
-		System.out.print("The customer hands you money. How much did he give you? >> ");
+		System.out.println("\nThe customer hands you money...");
+		System.out.print("\nHow much did he give you? >> ");
 		amountPaid = kb.nextDouble();
-		System.out.println(amountPaid);
+		System.out.println("\nYou take $" + amountPaid + ", and say, \"Thanks for the cash, just hold on while I check the change machine.\"");
 	}
 
 	/**
@@ -70,11 +66,10 @@ public class MakeChange {
 
 	public static void checkMoneyGiven(Scanner kb) {
 		if (amountPaid < itemPrice) {
-			System.out.println("The customer short changed you...");
+			System.out.println("\nThe customer short changed you...");
 			notEnough(amountPaid, kb);
 		} else if (amountPaid == itemPrice) {
-			System.out.println("No change due...");
-			System.out.println("The customer walks out the door with his item...");
+			System.out.println("\nThere is no change due...");
 			restart(kb);
 		}
 	}
@@ -89,39 +84,40 @@ public class MakeChange {
 	 * value is decremented and checks once again whether that same denomination
 	 * value is greater than change.
 	 * 
-	 * @author Jon Edwards
+	 * @author jon edwards
 	 */
 
 	public static void giveChangeDue() {
-		int j = 0;
-		System.out.println("...Calculating change...");
+		int aggregateCounter = 0;
 		double change = amountPaid - itemPrice;
-		System.out.println("You tell them $" + round(change) + " is due back.");
+		double total = round(change);
 		double[] denominations = { 100, 50, 20, 10, 5, 1, 0.25, 0.10, 0.05, 0.01 };
-		String[][] denominationNames = { {"Hundred", "Fifty", "Twenty", "Ten", "Five", "One", "Quarter",
-				"Dime", "Nickel", "Penny"}, {"Hundreds", "Fifties", "Twenties", "Tens", "Fives", "Ones", "Quarters", "Dimes", "Nickles", "Pennies"}};
+		String[][] denominationNames = {
+				{ "Hundred", "Fifty", "Twenty", "Ten", "Five", "One", "Quarter", "Dime", "Nickel", "Penny" },
+				{ "Hundreds", "Fifties", "Twenties", "Tens", "Fives", "Ones", "Quarters", "Dimes", "Nickles",
+						"Pennies" } };
+		cashMachineTop();
 		for (int i = 0; i < denominations.length; i++) {
-			int k = i;
-			if (round(denominations[i]) <= round(change)) {
-				// System.out.print(denominations[i] + "\t" +
-				// denominationNames[i] + "\t");
+			int iPrevValue = i; // Set k equal to the value of the loop
+								// incrementer
+			if (round(denominations[i]) <= round(change)) { // if value in array
 				round(change -= denominations[i]);
 				i--;
 			}
-			if (i != k) {
-				j++;
-			} else {
-				if (j != 0) {
-					if (j>1) {
-						System.out.println(j + " " + denominationNames[1][i]);						
-					} else {
-						System.out.println(j + " " + denominationNames[0][i]);						
-					}
+			if (i != iPrevValue) {
+				aggregateCounter++;
+			} else if (aggregateCounter != 0) {
+				if (aggregateCounter > 1) {
+					System.out.println(" > " +aggregateCounter + " " + denominationNames[1][i]);
+				} else {
+					System.out.println(" > " +aggregateCounter + " " + denominationNames[0][i]);
 				}
-				j = 0;
+				aggregateCounter = 0; // reset aggregateCounter
 			}
 
 		}
+		cashMachineBottom(total);
+		System.out.println("You hand the customer $" + total + " and he briskly walks out the door...but...");
 
 	}
 
@@ -136,16 +132,15 @@ public class MakeChange {
 	 *            The total amount the customer has given
 	 * @param kb
 	 *            User input.
-	 * @author Jon Edwards
+	 * @author jon edwards
 	 */
 	public static void notEnough(double custPaid, Scanner kb) {
 		double difference = itemPrice - amountPaid;
 
-		System.out.print("They better give you at least $" + round(difference));
-		System.out.println("more moneys, that isn't enough! >> ");
+		System.out.print("\nYou look back at the customer, \"Dude, I need at least $" + round(difference) + " more.");
 		System.out.println();
-		System.out.println("The customer hands you more money...");
-		System.out.println("How much did they give you? >> ");
+		System.out.println("\nThe customer hands you more money...");
+		System.out.print("\nHow much did they give you? >> ");
 		double moreMoney = round(kb.nextDouble());
 		amountPaid = round(amountPaid + moreMoney);
 
@@ -188,28 +183,48 @@ public class MakeChange {
 	/**
 	 * Restarts program using user input and a simple (y/n) switch.
 	 * 
-	 * @author Jon Edwards
+	 * @author jon edwards
 	 * @param kb
 	 */
 
 	public static void restart(Scanner kb) {
-		System.out.println("There is another customer in line. Should you help him? (y/n): ");
+		System.out.print("\nThere is another customer in line. Should you help him? (y/n) >> ");
 		String askRestart = "ninja";
 
 		askRestart = kb.next().toLowerCase();
 
 		switch (askRestart) {
 		case "n":
-			System.out.println("Thank you, come again!");
+			System.out.println("\nYou punch the cash register and walk out the store.");
+			System.out.println("You can feel the customer's eyes staring...judging...");
+			System.out.println("Your boss is yelling at you.");
+			System.out.println("\"GET BACK IN HERE!!!\" he screams --");
+			System.out.println("But you don't care.");
+			System.out.println("YOU QUIT!");
 			break;
 		case "y":
+			System.out.println();
 			run();
 			break;
 		default:
-			System.out.println("I don't understand...");
+			System.out.println("\nI don't understand...");
 			restart(kb);
 			break;
 		}
 	}
-
+	public static void cashMachineTop() {
+		System.out.println("\n**************************************");
+		System.out.println("**************************************");
+		System.out.println("    C C       A       SSS   HH   HH   ");
+		System.out.println("   CC	     A A      S     HH   HH   ");
+		System.out.println("   CC       A   A     SSS   HHHHHHH   ");
+		System.out.println("   CC      A A A A      S   HH   HH   ");
+		System.out.println("    C C   A       A   SSS   HH   HH   ");
+		System.out.println("**************************************");
+	}	
+	public static void cashMachineBottom(double total) {
+		System.out.println("**************************************");
+		System.out.println(" > Total: $" + total);
+		System.out.println("**************************************\n");
+	}
 }
