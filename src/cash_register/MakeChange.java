@@ -212,6 +212,11 @@ public class MakeChange {
 			break;
 		}
 	}
+	
+	/**
+	 * Top banner for cash Machine
+	 * @author jon edwards
+	 */
 	public static void cashMachineTop() {
 		System.out.println("\n**************************************");
 		System.out.println("**************************************");
@@ -222,6 +227,10 @@ public class MakeChange {
 		System.out.println("    C C   A       A   SSS   HH   HH   ");
 		System.out.println("**************************************");
 	}	
+	/**
+	 * Bottom banner from cash machine. Includes a total row.
+	 * @param total total change due
+	 */
 	public static void cashMachineBottom(double total) {
 		System.out.println("**************************************");
 		System.out.println(" > Total: $" + total);
