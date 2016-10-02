@@ -21,7 +21,7 @@ public class MakeChange {
 		checkMoneyGiven();
 		// Story 4: Display change due using largest denoms possible
 		giveChangeDue();
-		
+
 		restart(kb);
 
 	}
@@ -50,18 +50,37 @@ public class MakeChange {
 
 	public static void giveChangeDue() {
 		double change = amountPaid - itemPrice;
-		System.out.println(change);
+		//change = round(change);
+		System.out.println(round(change));
 		double[] denominations = { 100, 50, 20, 10, 5, 1, 0.5, 0.25, 0.10, 0.05, 0.01 };
 		for (int i = 0; i < denominations.length; i++) {
-				if (denominations[i] <= change) {
-					System.out.println(denominations[i]);
-					change = change - denominations[i];
-					i--;
-				}
+
+			if (round(denominations[i]) <= round(change)) {
+				System.out.println(denominations[i]);
+				round(change -= denominations[i]);
+
+				i--;
+			}
 
 		}
 
 	}
+
+	public static double round(double number) {
+		number *= 100;
+		double decimal = number - (int) number;
+		int intNumber = (int) number;
+		if (decimal >= 0.5) {
+			intNumber++;
+			number = (double) intNumber / 100.0;
+			return number;
+		} else {
+			number = (double) intNumber / 100.0;
+			return number;
+		}
+
+	}
+
 	public static void restart(Scanner kb) {
 		System.out.println("Would you look to restart (t/f): ");
 		String askRestart = kb.next();
@@ -71,4 +90,5 @@ public class MakeChange {
 			askRestart = "f";
 		}
 	}
+
 }
